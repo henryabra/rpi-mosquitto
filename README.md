@@ -6,16 +6,18 @@ Based upon [docker-mosquitto](https://github.com/toke/docker-mosquitto).
 ## How to run
 
 ```
-docker run -tip 1883:1883 -p 9001:9001 pascaldevink/rpi-mosquitto
+docker run -tip 1883:1883 -p 9001:9001 elradix/rpi-mosquitto
 ```
 
-Exposes Port 1883 (MQTT) 9001 (Websocket MQTT)
+Exposes Port 1883 (MQTT) 8883 (MQTT) 9001 (Websocket MQTT)
 
 Alternatively you can use volumes to make the changes persistent and change the configuration.
 ```
 mkdir -p /srv/mqtt/config/
 mkdir -p /srv/mqtt/data/
 mkdir -p /srv/mqtt/log/
+mkdir -p /srv/mqtt/scripts/
+
 # place your mosquitto.conf in /srv/mqtt/config/
 # NOTE: You have to change the permissions of the directories
 # to allow the user to read/write to data and log and read from
@@ -23,9 +25,10 @@ mkdir -p /srv/mqtt/log/
 # For TESTING purposes you can use chmod -R 777 /srv/mqtt/*
 # Better use "-u" with a valid user id on your docker host
 
-docker run -ti -p 1883:1883 -p 9001:9001 \
+docker run -ti -p 1883:1883 -p 8883:8883 -p 9001:9001 \
 -v /srv/mqtt/config:/mqtt/config:ro \
 -v /srv/mqtt/log:/mqtt/log \
+-v /srv/mqtt/log:/mqtt/scripts \
 -v /srv/mqtt/data/:/mqtt/data/ \
 --name mqtt pascaldevink/rpi-mosquitto
 ```
